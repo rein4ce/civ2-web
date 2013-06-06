@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 3rd party -->
+    <script src='js/3rdparty/jquery.js'></script>
+    <script src="js/3rdparty/transform.js"></script>
+    <script src="js/3rdparty/sprintf.js"></script>
+    <script src="js/3rdparty/PxLoader.js"></script>
+    <script src="js/3rdparty/PxLoaderImage.js"></script>
+    <script src="js/3rdparty/PxLoaderSound.js"></script>
+    <script src="js/3rdparty/noise.js"></script>
+
+    <!-- Game files -->
+    <script src='js/utils.js'></script>
+    <script src='js/model.js'></script>
+    <script src='js/game.js'></script>
+    <script src='js/player.js'></script>
+    <script src='js/tiles.js'></script>
+    <script src='js/map.js'></script>
+    <script src='js/unit.js'></script>
+    <script src='js/units.js'></script>
+    <script src='js/city.js'></script>
+    <script src='js/gui/city-screen.js'></script>
+    <script src='js/rules.js'></script>
+    <script src='js/resources.js'></script>
+    <script src='js/editor.js'></script>
+    <script src='js/civ.js'></script>
+
+    <!-- Dialogs -->
+    <script src='js/gui/new-map-dialog.js'></script>
+
+    <!-- CSS styles -->
+	<link rel="stylesheet" type="text/css" href='css/civ.css'>
+    <link rel="stylesheet" type="text/css" href='css/ui.css'>
+</head>
+<body>
+	<div id="container">
+
+
+        <!-- Game world view -->
+		<div id='view' oncontextmenu="return false;">
+            <!-- 3D world -->
+            <div id="map_view" class="layer">
+                <!-- Map tiles -->
+                <div id='map' class="layer">
+                    <canvas id="map_tiles"></canvas>
+                    <canvas id="map_fog"></canvas>
+                    <div class="selection"></div>
+                    <!--<div id="marker" style="background: rgba(255,0,0,0.5); outline: 1px solid red; width: 5px; height: 5px; position: absolute;"></div>-->
+                </div>
+
+
+            </div>
+
+            <!-- Units -->
+            <div id="map_units_outer" class="layer">
+                <div id="map_units"></div>
+            </div>
+		</div>
+
+
+
+		<div class="editor">			
+		</div>
+
+       <div id="gui">
+
+            <!-- Top menu bar -->
+            <div class="menu-bar">
+                <button id="menu-new-map">New Map</button>
+                <button id="menu-load-map" class="disabled">Load Map</button>
+                <button id="menu-save-map" class="disabled">Save Map</button>
+                <button id="end-turn" class="pull-right disabled">End Turn</button>
+            </div>
+
+            <!--<div id="turn" style="position: absolute; top: 3px; right: 60px;  color: white;"></div>-->
+
+
+            <div id="dialogs">
+
+                <!-- Dark overlay -->
+                <div id="dialog-backdrop"></div>
+
+                <!-- Test dialog -->
+                <div id="dialog-test" class="dialog">
+                    <div class="dialog-title-bar">
+                        <ul class="dialog-buttons">
+                            <li class="dialog-close-btn"></li>
+                            <li class="dialog-min-btn"></li>
+                            <li class="dialog-max-btn"></li>
+                        </ul>
+                        <span class="dialog-title">Test Dialog</span>
+                    </div>
+                    <div class="dialog-inner">
+
+                        <button>Build Unit</button>
+                    </div>
+                </div>
+
+                <!-- New map dialog -->
+                <div id="dialog-new-map" class="dialog dialog-with-buttons" style="height: 220px; margin-top: -110px;">
+                    <div class="dialog-title-bar">
+                        <ul class="dialog-buttons">
+                            <li class="dialog-close-btn"></li>
+                            <li class="dialog-min-btn"></li>
+                            <li class="dialog-max-btn"></li>
+                        </ul>
+                        <span class="dialog-title">Create New Map</span>
+                    </div>
+                    <div class="dialog-inner">
+                        <span>Name for your new map:</span><br>
+                        <input id="new-map-name" type="text" value="New map">
+                        <br>
+                        <span>Size (width and height):</span><br>
+                        <input id="new-map-width" type="text" value="50" style="width: 50px">x
+                        <input id="new-map-height" type="text" value="50" style="width: 50px">
+                        <br>
+                    </div>
+                    <div class="dialog-bottom-buttons">
+                        <button class="cancel-button">Cancel</button>
+                        <button id="new-map-create-btn">Create</button>
+                    </div>
+                </div>
+
+
+                <!-- Saving dialog -->
+                <div id="dialog-caption" class="dialog" style="height: 76px; margin-top: -38px;">
+                    <div class="dialog-title-bar">
+                        <span class="dialog-title">Please Wait</span>
+                    </div>
+                    <div class="dialog-inner">
+                        <span id="dialog-caption-text">Saving Map...</span>
+                    </div>
+                </div>
+
+
+                <!-- City screen -->
+                <div id="city-screen" class="dialog" style="display: none;">
+                    <div class="dialog-title-bar">
+                        <ul class="dialog-buttons">
+                            <li class="dialog-close-btn"></li>
+                            <li class="dialog-min-btn"></li>
+                            <li class="dialog-max-btn"></li>
+                        </ul>
+                        <span class="dialog-title">Berlin, A.D. 1943</span>
+                    </div>
+                    <div class="dialog-inner">
+                        <div class="minimap">
+                            <canvas class="minimap-view">
+                            </canvas>
+                            <div class="minimap-shadow"></div>
+                            <div class="taken-tiles">
+
+                            </div>
+                            <img class="tile-select" src="img/whitetile.png" style="opacity: 0.75; position: absolute; top: 50px; left: 50px; width: 48px; height: 24px; pointer-events: none;">
+                            <div class="city"></div>
+                            <canvas class="overlay">
+                            </canvas>
+
+                        </div>
+                        <canvas class="foodbar"></canvas>
+                        <canvas class="trade"></canvas>
+                        <canvas class="output"></canvas>
+                        <canvas class="shieldbar"></canvas>
+                        <canvas class="food-storage"></canvas>
+                        <canvas class="shields"></canvas>
+                        <canvas class="supported-units"></canvas>
+                        <canvas class="supported-buildings"></canvas>
+                        <canvas class="units-present"></canvas>
+                        <div class="production-bar">
+                            <div class="complete btn">Complete</div>
+                            <div class="icon unit"></div>
+                            <div class="change btn">Change</div>
+                        </div>
+                        <div class="production-list-window">
+                            <ul>
+                                <li>
+                                    <div class="icon unit"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon unit"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon unit"></div>
+                                    <span>sdfsfsdfsdfsffs dgf d dgd g </span>
+                                </li>
+                                <li>
+                                    <div class="icon unit"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon unit"></div>
+                                    <span>Settler</span>
+                                </li>
+
+                                <li class="divider"></li>
+                                <li></li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>sdfsfsdfsdfsffs dgf d dgd g </span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>sdfsfsdfsdfsffs dgf d dgd g </span>
+                                </li>
+                                <li>
+                                    <div class="icon building"></div>
+                                    <span>Settler</span>
+                                </li>
+
+                            </ul>
+                            <div class="button">Close</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+
+
+	
+</body>
+
+</html>
