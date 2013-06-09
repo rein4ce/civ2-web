@@ -55,6 +55,7 @@ var City = function(x, y, player, name, options)
 	// create DOM element
 	var pos = getUnitIconPosition(3,this.type);
 	this.div = $("<div class='city'/>").css("background-position", pos.x+"px "+ pos.y+"px" );
+	$cities.append(this.div);
 
 	// city name
 	var title = $("<span class='city-name'></span>").text(this.name);
@@ -74,8 +75,12 @@ var City = function(x, y, player, name, options)
 		city.x = x;
 		city.y = y;
 		city.absPos	= Game.map.getTilePos(x,y);
-		city.div.css("transform", "translate3d("+(city.absPos.x)+"px, 0px, "+((y/2-map3dHeightHalf)*map3dHeightHalf)+"px)");
-		city.div.css("z-index",y*10);
+		city.div.css({
+			top: city.absPos.y+"px",
+			left: city.absPos.x+"px"
+		});
+		//city.div.css("transform", "translate3d("+(city.absPos.x)+"px, 0px, "+((y/2-map3dHeightHalf)*map3dHeightHalf)+"px)");
+		//city.div.css("z-index",y*10);
 	}
 
 	/**
@@ -116,6 +121,7 @@ var City = function(x, y, player, name, options)
 	}
 
 	update();
+	setMapPosition(x,y);
 
 	this.update			= update;
 	this.onSelect		= onSelect;
@@ -160,7 +166,7 @@ var CityMiniIconsSprites =
 	Size:			10
 };
 
-var CityNames = 
+var CityNames =
 {
 	Americans: [
 		"Washington",

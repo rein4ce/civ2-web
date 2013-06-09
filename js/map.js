@@ -42,6 +42,7 @@ var Tile = function(type)
 	this.city	= null;					// tile is used by a city
 	this.feature = TileFeatures.None;
 	this.fortification = Fortifications.None;
+	this.div	= null;					// DOM elements for 3d tiles
 };
 
 var Spawnpoint = function(x,y,race)
@@ -101,6 +102,8 @@ var Map = function()
 		$mapCanvas.attr("height", map.actualHeight);
 		$mapFogCanvas.attr("width", map.actualWidth);
 		$mapFogCanvas.attr("height", map.actualHeight);
+
+		$("#terrain").empty();			// remove terrain tiles
 
 		this.moveTo(this.width/2,this.height/2);
 		this.generateRandom();
@@ -193,6 +196,22 @@ var Map = function()
 
 				if ((y == 0 || y == this.height-1) && type != TileTypes.Ocean)
 					type = TileTypes.Glacier;
+
+				// TODO: temp, 3d tiles
+				// insetad of painitng flat forests and mountains, create 3d version of them
+				/*var pos = this.getTilePos(x, y);
+				if (type == TileTypes.Forest || type == TileTypes.Mountains)
+				{
+					var t = $("<div class='terrain'></div>").css({ top: pos.y+"px", left: pos.x+"px" });
+					if (type == TileTypes.Forest)
+						t.css("background-position", -(1+((Math.random()*8)|0) * 65)+"px -"+(1+((Math.random()*2)|0) * 33 + 4 * 33)+"px")
+					if (type == TileTypes.Mountains)
+						t.css("background-position", -(1+((Math.random()*8)|0) * 65)+"px -"+(1+((Math.random()*2)|0) * 33 + 6 * 33)+"px")
+					$("#terrain").append(t);
+					type = TileTypes.Grassland;
+				}*/
+
+				// TODO: end
 
 				var tile = new Tile(type.id);
 				if (type == TileTypes.Ocean && h < 0.25 + Math.random() * 0.02) tile.variant = 1;
@@ -298,7 +317,8 @@ var Map = function()
 		var variant = tile.variant !== null ? tile.variant :  ((type.iconsNum == 1 ? 0 : ((x+y)%2)));
 		var tx = 1 + variant  * (TileWidth+1);
 		var ty = 1 + tile.type * (TileHeight + 1);
-		var pos = this.getTilePos(x, y);
+		var mapPos = this.getTilePos(x, y);
+		var pos = { x: mapPos.x, y: mapPos.y };
 
 		// offset the tile position
 		pos.x += offset.x;
@@ -311,6 +331,37 @@ var Map = function()
 			context.globalCompositeOperation = "destination-out";
 			context.drawImage(Images["img/blacktile.png"], 0, 0, TileWidth, TileHeight, pos.x, pos.y+sy, TileWidth, th);
 			context.restore();
+		}
+
+		// if it's a 3d tile and 3d map is on
+		if (civ.map3d)
+		{
+			if (type == TileTypes.Forest || type == TileTypes.Mountains)
+			{
+				if (!tile.div)
+				{
+					tile.div = $("<div class='terrain'></div>").css({ top: mapPos.y+"px", left: mapPos.x+"px" });
+					$terrain.append(tile.div);
+				}
+
+				if (type == TileTypes.Forest)
+					tile.div.css("background-position", -1+"px -"+(1 + 4 * 33)+"px")
+				if (type == TileTypes.Mountains)
+					tile.div.css("background-position", -1+"px -"+(1 + 6 * 33)+"px")
+
+				// draw grassland on the main map
+				tx = 1;
+				ty = 1 + 33 * 2;
+			}
+			else
+			{
+				// remove the 3d tile if exists
+				if (tile.div)
+				{
+					tile.div.remove();
+					tile.div = null;
+				}
+			}
 		}
 
 		context.drawImage(this.tileset[0], tx, ty+sty, TileWidth, th, pos.x, pos.y+sy, TileWidth, th);
@@ -420,8 +471,8 @@ var Map = function()
 		tx = 0; ty = -1;
 		switch (type.name)
 		{
-			case "Forest": ty = 4; break;
-			case "Mountains": ty = 6; break;
+			case "Forest": ty = 4; break;				// 3d tile
+			case "Mountains": ty = 6; break;			// 3d tile
 			case "Hills": ty = 8; break;
 		}
 
@@ -432,7 +483,13 @@ var Map = function()
 			if (tile.type == this.getTileType(sx,y+1)) tx += 4;
 			if (tile.type == this.getTileType(sx+1,y+1)) tx += 2;
 			if (tile.type == this.getTileType(sx+1,y-1)) tx += 1;
-			context.drawImage(this.tileset[1], 1+tx*(TileWidth+1), 1+ty*(TileHeight+1)+sty, TileWidth, th, pos.x, pos.y+sy, TileWidth, th);
+
+			if (civ.map3d && tile.div)
+			{
+				tile.div.css("background-position", (-(1+tx*(TileWidth+1)))+"px "+(-(1+ty*(TileHeight+1)))+"px");
+			}
+			else
+				context.drawImage(this.tileset[1], 1+tx*(TileWidth+1), 1+ty*(TileHeight+1)+sty, TileWidth, th, pos.x, pos.y+sy, TileWidth, th);
 		}
 
 		// check for rivers
@@ -572,8 +629,7 @@ var Map = function()
 	{
 		this.x = x;
 		this.y = y;
-		//$map.move(x,y);
-		$map.css("transform", "translate3d("+x+"px,"+y+"px,1px)");
+		$map.css("transform", "matrix3d(1,0,0,0, 0,1,0,0, 0,0,1,0, "+ (x|0)+","+(y|0)+",1,1)");
 		this.view.x = -x;
 		this.view.y = -y;
 
@@ -654,7 +710,7 @@ var Map = function()
 			{
 				map.hover = tile;
 				var pos = map.getTilePos(map.hover.x, map.hover.y);
-				$select.move(pos.x, pos.y);
+				$select.move(pos.x, pos.y, null, 1);
 			}
 
 			// check if hovering over a unit
@@ -675,12 +731,12 @@ var Map = function()
 				map.moveTo( newX, newY );
 
 				// scroll also the units layer
-				var transform = "translate3d("+(newX+map3dOffsetX)+"px, "+map3dOffsetY+"px, "+(newY/3.55)+"px)";
-				$("#map_units").css("transform", transform);
+				//var transform = "translate3d("+(newX+map3dOffsetX)+"px, "+map3dOffsetY+"px, "+(newY/3.55)+"px)";
+				//$("#map_units").css("transform", transform);
 			}
 
 			// If we are scrolling, make units not-block the scrolling operation
-			$("#map_units").toggleClass("scrolling", map.dragging)
+			//$("#map_units").toggleClass("scrolling", map.dragging)
 		});
 	};
 
@@ -736,7 +792,7 @@ var Map = function()
 	this.selectTile = function(x,y)
 	{
 		var pos = this.getTilePos(x,y);
-		$select.move(pos.x, pos.y);
+		$select.move(pos.x, pos.y, null, 1);
 	};
 
 

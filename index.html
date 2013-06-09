@@ -40,28 +40,44 @@
         <!-- Game world view -->
 		<div id='view' oncontextmenu="return false;">
             <!-- 3D world -->
-            <div id="map_view" class="layer">
+            <div id="map_view" class="layer rot20">
+
                 <!-- Map tiles -->
                 <div id='map' class="layer">
                     <canvas id="map_tiles"></canvas>
                     <canvas id="map_fog"></canvas>
                     <div class="selection"></div>
                     <!--<div id="marker" style="background: rgba(255,0,0,0.5); outline: 1px solid red; width: 5px; height: 5px; position: absolute;"></div>-->
+
+                    <!-- All units and other objects -->
+                    <div id="cities">
+                    </div>
+
+                    <div id="terrain">
+
+                    </div>
+
+                    <!--<div id="units" style="-webkit-transform-style: preserve-3d;">
+                        <div class="city-new" style="width: 64px; height: 48px; background-color: rgba(255,0,0,0.5); border: 1px solid red; border-bottom: 1px solid #ffff00; position: absolute; top: 0; left: 0; -webkit-transform: rotateX(-25deg) translateZ(0px) translateY(-16px);"></div>
+
+                    </div>-->
                 </div>
 
 
+
             </div>
+
+
 
             <!-- Units -->
-            <div id="map_units_outer" class="layer">
+            <!--<div id="map_units_outer" class="layer">
                 <div id="map_units"></div>
-            </div>
+            </div>-->
 		</div>
 
 
 
-		<div class="editor">			
-		</div>
+
 
        <div id="gui">
 
@@ -95,6 +111,9 @@
 
                         <button>Build Unit</button>
                     </div>
+                </div>
+
+                <div class="editor">
                 </div>
 
                 <!-- New map dialog -->

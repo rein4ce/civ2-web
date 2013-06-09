@@ -8,6 +8,9 @@
 body {
 	padding: 0px;
 	background: url("../img/ui/background.png");
+	height: 100%;
+
+	pointer-events: none;
 }
 
 #container {
@@ -16,6 +19,8 @@ body {
 	overflow: hidden;
 	background: black;
 	height: 100%;
+
+	pointer-events: none;
 }
 
 #view {
@@ -26,12 +31,13 @@ body {
 	margin: auto;
 	background: black;
 
-	-webkit-user-select: none;
+	webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-o-user-select: none;
 	user-select: none;
 
+	pointer-events: none;
 }
 
 .pull-left { float: left; }
@@ -41,17 +47,37 @@ body {
 	position: absolute;
 	top: 0; left: 0;
 	width: 100%; height: 100%;
+
+}
+
+#map_view.rot0 {
+	-webkit-transform: perspective(600px) rotateX(0deg);
+	transform: perspective(600px) rotateX(0deg);
+}
+#map_view.rot15 {
+	-webkit-transform: perspective(600px) rotateX(15deg);
+	transform: perspective(600px) rotateX(15deg);
+}
+#map_view.rot25 {
+	/*-webkit-transform: perspective(600px) rotateX(25deg);
+	transform: perspective(600px) rotateX(25deg);*/
+	-webkit-transform: matrix3d(1, 0, 0, 0, 0, 0.9063077870366499, 0.42261826174069944, -0.0007043637695678325, 0, -0.42261826174069944, 0.9063077870366499, -0.0015105129783944166, 0, 0, 0, 1);
+	-moz-transform: matrix3d(1, 0, 0, 0, 0, 0.9063077870366499, 0.42261826174069944, -0.0007043637695678325, 0, -0.42261826174069944, 0.9063077870366499, -0.0015105129783944166, 0, 0, 0, 1);
+	backface-visibility: hidden;
+}
+#map_view.rot20 {
+	-webkit-transform: perspective(600px) rotateX(20deg);
+	transform: perspective(600px) rotateX(20deg);
+}
+
+#map_view {
+	pointer-events: auto;
 }
 
 /* Map view is the 3d transformed world space on which flat 3d world items are shown */
-#map_view {
-	-webkit-transform: perspective(600px) rotateX(15deg);
-transform: perspective(600px) rotateX(15deg);
-}
 
 #view * {
 	position: absolute;
-
 }
 
 #gui #turn {
@@ -59,8 +85,9 @@ transform: perspective(600px) rotateX(15deg);
 }
 
 #gui * {
-	-webkit-transform: translate3d(0,0,1000px);
-transform: translate3d(0,0,1000px);
+
+
+	pointer-events: auto;
 }
 
 .disabled {
@@ -110,6 +137,7 @@ transform-style: preserve-3d;
 	position: absolute;
 }
 
+
 #map .selection {
 	background: url("../img/selection.png") no-repeat center;
 	margin: -1px auto auto 1px;
@@ -135,27 +163,28 @@ TRICK: if we want an element to be sharp at all times, apply:
 */
 
 /* Units */
-#map .unit {
+#map_units .unit {
 	-webkit-transition: all 0.35s ease-out;
-transition: all 0.35s ease-out;
+	transition: all 0.35s ease-out;
 	position: absolute;
 	background: url("../img/units.png") no-repeat;
 	width: 64px; height: 48px;
 	margin-top: -16px;
 	pointer-events: auto;
 	cursor: pointer;
+	border: 1px solid red;
 }
-#map .unit:hover {
+#map_units .unit:hover {
 	/*outline:  1px solid white;		/* TODO: temp */
 }
-#map .unit.used .shield {
+#map_units .unit.used .shield {
 	-webkit-filter: contrast(50%);
 filter: contrast(50%);
 }
-#map .unit.sleep {
+#map_units .unit.sleep {
 	opacity: 0.65;
 }
-#map .unit .shield {
+#map_units .unit .shield {
 	background: url("../img/shield.png");
 	width: 12px; height: 15px;
 	z-index: 1;
@@ -166,7 +195,7 @@ filter: contrast(50%);
 }
 
 /* Unit health bar */
-#map .unit .shield .hp {
+#map_units .unit .shield .hp {
 	position: absolute;
 	top: 1px; left: 1px;
 	width: 10px; height: 2px;
@@ -175,22 +204,22 @@ filter: contrast(50%);
 	border-bottom: 1px solid #6A0;
 	outline: 1px solid black;
 }
-#map .unit .shield .hp.green {
+#map_units .unit .shield .hp.green {
 	background: #8D0;
 	border-top-color: #AF0;
 	border-bottom-color: #6A0;
 }
-#map .unit .shield .hp.yellow {
+#map_units .unit .shield .hp.yellow {
 	background: #FD0;
 	border-top-color: #FFC;
 	border-bottom-color: #B90;
 }
-#map .unit .shield .hp.red {
+#map_units .unit .shield .hp.red {
 	background: #F00;
 	border-top-color: #F88;
 	border-bottom-color: #A00;
 }
-#map .unit.selected {
+#map_units .unit.selected {
 	-webkit-animation-name: blink;
 animation-name: blink;
 	-webkit-animation-duration: 0.75s;
@@ -200,7 +229,7 @@ animation-iteration-count: infinite;
 }
 
 /* Cities */
-.city {
+.city-old {
 	position: absolute;
 	background: url("../img/cities.png") no-repeat;
 	width: 64px; height: 48px;
@@ -211,10 +240,95 @@ animation-iteration-count: infinite;
 	-webkit-filter: grayscale(0);
 filter: grayscale(0);
 }
-.city:hover {
+
+#map, #map_view, #cities, #terrain {
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+
+#terrain {
+	-webkit-transform: translate3d(0,0,10px);		/* Make sure all units and cities are in front of the map layer */
+	transform: translate3d(0,0,10px);
+}
+#cities {
+	-webkit-transform: translate3d(0,0,0px);		/* Make sure all units and cities are in front of the map layer */
+	transform: translate3d(0,0,0px);
+}
+#units {
+	-webkit-transform: translate3d(0,0,1px);		/* Make sure all units and cities are in front of the map layer */
+	transform: translate3d(0,0,12px);
+}
+
+/*********************************
+/* Cities
+*********************************/
+#cities .city {
+	position: absolute;
+	top: 0; left: 0;
+	width: 64px; height: 48px;
+	background: url("../img/cities.png") no-repeat;
+	background-position: -66px -197px;
+	margin-top: -16px;
+	pointer-events: none;
+}
+
+#map_view.rot0 #cities .city,
+#map_view.rot0 #units .unit {
+	-webkit-transform: rotateX(0deg) translate3d(0,0px,15px);
+	transform: rotateX(0deg) translate3d(0,0px,15px);
+}
+#map_view.rot15 #cities .city,
+#map_view.rot15 #units .unit {
+	-webkit-transform: rotateX(-15deg) translate3d(0,0px,15px);
+	transform: rotateX(-15deg) translate3d(0,0px,15px);
+}
+#map_view.rot25 #cities .city,
+#map_view.rot25 #units .unit {
+	-webkit-transform: rotateX(-25deg) translate3d(0,0px,15px);
+	transform: rotateX(-25deg) translate3d(0,0px,15px);
+}
+#map_view.rot20 #cities .city,
+#map_view.rot20 #units .unit {
+	-webkit-transform: rotateX(-20deg) translate3d(0,0px,15px);
+	transform: rotateX(-20deg) translate3d(0,0px,15px);
+}
+
+/*********************************
+/* 3D Terrain Tiles
+*********************************/
+#terrain .terrain {
+	position: absolute;
+	top: 0; left: 0;
+	width: 64px; height: 32px;
+	background: url("../img/terrain2.png") no-repeat;
+	background-position: -66px -197px;
+	margin-top: 0px;
+	pointer-events: none;
+}
+
+#map_view.rot0 #terrain .terrain {
+	-webkit-transform: rotateX(0deg) translate3d(0,-0px,0);
+	transform: rotateX(0deg) translate3d(0,-0px,0);
+}
+#map_view.rot15 #terrain .terrain {
+	-webkit-transform: rotateX(-15deg) translate3d(0,-0px,0);
+	transform: rotateX(-15deg) translate3d(0,-0px,0);
+}
+#map_view.rot25 #terrain .terrain {
+	-webkit-transform: rotateX(-25deg) translate3d(0,-0px,0);
+	transform: rotateX(-25deg) translate3d(0,-0px,0);
+}
+#map_view.rot20 #terrain .terrain {
+	-webkit-transform: rotateX(-20deg) translate3d(0,-0px,0);
+	transform: rotateX(-20deg) translate3d(0,-0px,0);
+}
+
+
+
+#cities .city:hover {
 	/*outline:  1px solid white;*/
 }
-.city-name {
+#cities .city .city-name {
 	display: block;
 	font: 16px "Times New Roman";
 	color: white;
@@ -228,7 +342,7 @@ filter: grayscale(0);
 	-webkit-filter: none;
 filter: none;
 }
-.city-size {
+#cities .city .city-size {
 	display: block;
 	font: bold 11px Arial;
 	padding: 0 1px 0 1px;
@@ -249,13 +363,11 @@ filter: none;
 /* Editor
 *****************************************/
 .editor {
-	position: relative;
+	position: absolute;
+	bottom: 25px;
 	margin: 10px;
 	width: 100%; text-align: center;
-	padding-bottom: 50px;
-	pointer-events: normal;
-	-webkit-transform: translate3d(0,0,1000px);
-transform: translate3d(0,0,1000px);
+	pointer-events: auto;
 }
 
 .editor .tile {
@@ -389,7 +501,7 @@ transform: scale(0.75);
 	left: 196px; top: 215px;
 }
 
-#city-screen .city {
+#city-screen .city-old {
 	top: 50%; left: 50%;
 	-webkit-transform: scale(0.75);
 transform: scale(0.75);

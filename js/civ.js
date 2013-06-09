@@ -11,9 +11,21 @@ var mapCtx			= null;
 var mapFogCtx 		= null;
 var $select 		= null;
 var $units			= null;
+var $terrain		= null;
+var $cities			= null;
 
 var Width 			= null;
 var Height 			= null;
+
+var Civ = function()
+{
+	this.map3d			= true;			// make forests and mountains 3d tiles
+}
+
+
+
+
+var civ = new Civ();
 
 $(function()
 {
@@ -49,8 +61,9 @@ var realtime, frametime, oldRealtime;
  */
 function initView()
 {
+	// TODO: temp
 	// Setup 3d view
-	var rotation = "15deg";
+/*	var rotation = "15deg";
 	var perspective = map3dPerspective+"px";
 	$("#map_units_outer")
 		.css({
@@ -66,7 +79,7 @@ function initView()
 		.css("-webkit-transform", "translate3d("+map3dOffsetX+"px, "+map3dOffsetY+"px, 0px)")
 		.css("transform", "translate3d("+map3dOffsetX+"px, "+map3dOffsetY+"px, 0px)")
 		.css("-webkit-transform-style", "preserve-3d")
-		.css("transform-style", "preserve-3d");
+		.css("transform-style", "preserve-3d");*/
 }
 
 /**
@@ -81,7 +94,10 @@ function initSelectors()
 	mapCtx			= $("#map_tiles")[0].getContext("2d");
 	mapFogCtx 		= $("#map_fog")[0].getContext("2d");
 	$select 		= $("#map .selection");
-	$units			= $("#map_units");
+
+	$units			= $("#units");
+	$cities			= $("#cities");
+	$terrain		= $("#terrain");
 
 	Width 			= $container.width();
 	Height 			= $container.height();

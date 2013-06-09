@@ -24,11 +24,11 @@ $.fn.extend({
 	 * @param y
 	 * @param time
 	 */
-	move: function(x,y,time) {
+	move: function(x,y,time,z) {
 		if (time == null)
-			$(this).css("transform", "translate3d("+x+"px,"+y+"px,0)");
+			$(this).css("transform", "translate3d("+x+"px,"+y+"px,"+(z||0)+"px)");
 		else
-			$(this).animate({"transform": "translate3d("+x+"px,"+y+"px,0)"}, time);
+			$(this).animate({"transform": "translate3d("+x+"px,"+y+"px,"+(z||0)+"px)"}, time);
 	}
 })
 

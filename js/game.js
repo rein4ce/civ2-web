@@ -46,6 +46,20 @@ var Game = new (function()
 		{
 			this.createUnit(this.players[i], 5+i,20+i*5, UnitTypes.Settler);//(Math.random()*Map.width)|0, (Math.random()*Map.height)|0, UnitTypes.Settler);
 		}*/
+		/*for (var i=0; i<50; i++)
+		{
+
+			var x = (Math.random() * this.map.width)|0;
+			var y = (Math.random() * this.map.height)|0;
+			var pos = this.map.getTilePos(x, y);
+
+			var city = $('<div class="city"></div>');
+			city.css({
+				top: pos.y+"px",
+				left: pos.x+"px"
+			});
+			$("#cities").append(city);
+		}*/
 
 		this.endTurn();
 
@@ -78,7 +92,7 @@ var Game = new (function()
 
 		this.cities = [];
 
-		for (var i=0; i<CityNames.Americans.length; i++)
+		for (var i=0; i</*CityNames.Americans.length*/200; i++)
 		{
 			var x = (Math.random()*this.map.width)|0;
 			var y = (Math.random()*this.map.height)|0;
@@ -89,7 +103,7 @@ var Game = new (function()
 				y = (Math.random()*this.map.height)|0;
 				tile = this.map.getTileType(x,y);
 			}
-			this.createCity( this.players[0], x, y, CityNames.Americans[i]);
+			this.createCity( this.players[0], x, y, CityNames.Americans[0]);
 		}
 	}
 
@@ -160,7 +174,7 @@ var Game = new (function()
 		var city = new City(x, y, player, name, options);
 		this.cities.push(city);
 		player.cities.push(city);
-		$units.append(city.div);
+		//$units.append(city.div);
 	}
 
 	/**
