@@ -15,3 +15,6 @@ The 3D feature, that adds perspective to the ground and makes units and cities a
 
 
 **DEMO:** https://dl.dropboxusercontent.com/u/11531325/civ2/index.html
+
+Right Click + Drag  - pan map around
+Left Click          - edit terrain
