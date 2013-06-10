@@ -11,5 +11,7 @@ It features:
 This project tests the capabilities of DOM only rendering techniques in terms of performance and responsiveness on mobile devices. It runs notably faster than pure Canvas implementation and allows any viewport size withour significant performance hit.
 The 3D feature, that adds perspective to the ground and makes units and cities as well as terrain features (forests, mountains) to stand out, is optional, and also configurable for various viewing angles.
 
+*NOTE: for best performance, test on Chrome/Safari browsers*
+
 
 **DEMO:** https://dl.dropboxusercontent.com/u/11531325/civ2/index.html
