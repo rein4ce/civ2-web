@@ -18,7 +18,6 @@ var CityTile =
 
 var City = function(x, y, player, name, options)
 {
-	var city = this;
 	options = options || {};
 
 	// city parameters
@@ -50,82 +49,80 @@ var City = function(x, y, player, name, options)
 	this.x				= x;
 	this.y				= y;
 	this.div			= null;						// DOM element
-	this.absPos			= Game.map.getTilePos(x,y);		// get map pixel position
+	this.absPos			= civ.map.getTilePos(x,y);		// get map pixel position
 
-	// create DOM element
+	// create DOM elements
 	var pos = getUnitIconPosition(3,this.type);
 	this.div = $("<div class='city'/>").css("background-position", pos.x+"px "+ pos.y+"px" );
 	$cities.append(this.div);
 
 	// city name
-	var title = $("<span class='city-name'></span>").text(this.name);
-	title.appendTo(this.div);
+	this.$title = $("<span class='city-name'></span>").text(this.name);
+	this.$title.appendTo(this.div);
 
 	// city size
-	var size = $("<span class='city-size'></span>").text(this.size);
-	size.appendTo(this.div);
+	this.$size = $("<span class='city-size'></span>").text(this.size);
+	this.$size.appendTo(this.div);
 
-	/**
-	 * Position DOM element on the map
-	 * @param x
-	 * @param y
-	 */
-	function setMapPosition(x,y)
-	{
-		city.x = x;
-		city.y = y;
-		city.absPos	= Game.map.getTilePos(x,y);
-		city.div.css({
-			top: city.absPos.y+"px",
-			left: city.absPos.x+"px"
-		});
-		//city.div.css("transform", "translate3d("+(city.absPos.x)+"px, 0px, "+((y/2-map3dHeightHalf)*map3dHeightHalf)+"px)");
-		//city.div.css("z-index",y*10);
-	}
+	// Initialize
+	this.init();
+}
 
-	/**
-	 * Update city object according to it's state
-	 */
-	function update()
-	{
-		size.text(city.size);
 
-		// choose appropriate city icon according to size
-		var pos;
-		if (city.size >= 8) pos = getUnitIconPosition(3,this.type); else
-		if (city.size >= 6) pos = getUnitIconPosition(2,this.type); else
-		if (city.size >= 4) pos = getUnitIconPosition(1,this.type); else
-			pos = getUnitIconPosition(0,this.type);
-		city.div.css("background-position", pos.x+"px "+ pos.y+"px" );
-
-		// update position
-		setMapPosition(x, y);
-		//city.div.css("transform", "translate3d("+(city.absPos.x)+"px, 2px, "+((city.y/2-map3dHeightHalf)*map3dHeightHalf)+"px)");
-		//city.div.css("z-index",y);
-	}
-
-	/**
-	 * Select city
-	 */
-	this.div.click(function()
-	{
-		//Game.selectCity(city);
+/**
+ * Position DOM element on the map
+ * @param x
+ * @param y
+ */
+City.prototype.setMapPosition = function(x,y)
+{
+	this.x = x;
+	this.y = y;
+	this.absPos	= civ.map.getTilePos(x,y);
+	this.div.css({
+		top: this.absPos.y+"px",
+		left: this.absPos.x+"px"
 	});
+}
 
-	/**
-	 * Called when city is selected
-	 */
-	function onSelect()
+
+/**
+ * Update city object according to it's state
+ */
+City.prototype.update = function()
+{
+	this.$size.text(this.size);
+
+	// choose appropriate city icon according to size
+	var pos;
+	if (this.size >= 8) pos = getUnitIconPosition(3,this.type); else
+	if (this.size >= 6) pos = getUnitIconPosition(2,this.type); else
+	if (this.size >= 4) pos = getUnitIconPosition(1,this.type); else
+		pos = getUnitIconPosition(0,this.type);
+	this.div.css("background-position", pos.x+"px "+ pos.y+"px" );
+
+	// update position
+	this.setMapPosition(this.x, this.y);
+}
+
+
+City.prototype.init = function()
+{
+	//this.update();		// TODO: use large city icons for debugging
+	this.setMapPosition(this.x, this.y);
+	this.initEvents();
+}
+
+
+City.prototype.initEvents = function()
+{
+	this.div.unbind("click.city").click(function()
 	{
 
-	}
+	});
+}
 
-	update();
-	setMapPosition(x,y);
 
-	this.update			= update;
-	this.onSelect		= onSelect;
-};
 
 // Positioning of the icons
 var CityIconsSprites =

@@ -76,24 +76,24 @@ var Editor =
 			canvas.width = TileWidth;
 			canvas.height = TileHeight;
 
-			var coord = Game.map.getTilesetTileCoord(i);
+			var coord = civ.map.getTilesetTileCoord(i);
 
 			// draw tile base
-			ctx.drawImage(Game.map.tileset[0], coord.x, coord.y,	TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
+			ctx.drawImage(civ.map.tileset[0], coord.x, coord.y,	TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
 
 			// draw extra layer for some tiles
 			switch (type)
 			{
 				case TileTypes.Forest:
-					ctx.drawImage(Game.map.tileset[1], 1, 4 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
+					ctx.drawImage(civ.map.tileset[1], 1, 4 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
 					break;
 
 				case TileTypes.Hills:
-					ctx.drawImage(Game.map.tileset[1], 1, 8 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
+					ctx.drawImage(civ.map.tileset[1], 1, 8 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
 					break;
 
 				case TileTypes.Mountains:
-					ctx.drawImage(Game.map.tileset[1], 1, 6 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
+					ctx.drawImage(civ.map.tileset[1], 1, 6 * (TileHeight + 1) + 1, TileWidth, TileHeight, 0, 0,	TileWidth, TileHeight);
 					break;
 
 				case TileTypes.Ocean:

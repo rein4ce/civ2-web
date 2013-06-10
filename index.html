@@ -2,13 +2,13 @@
 <html>
 <head>
     <!-- 3rd party -->
-    <script src='js/3rdparty/jquery.js'></script>
-    <script src="js/3rdparty/transform.js"></script>
-    <script src="js/3rdparty/sprintf.js"></script>
-    <script src="js/3rdparty/PxLoader.js"></script>
-    <script src="js/3rdparty/PxLoaderImage.js"></script>
-    <script src="js/3rdparty/PxLoaderSound.js"></script>
-    <script src="js/3rdparty/noise.js"></script>
+    <script src='js/vendor/jquery.js'></script>
+    <script src="js/vendor/transform.js"></script>
+    <script src="js/vendor/sprintf.js"></script>
+    <script src="js/vendor/PxLoader.js"></script>
+    <script src="js/vendor/PxLoaderImage.js"></script>
+    <script src="js/vendor/PxLoaderSound.js"></script>
+    <script src="js/vendor/noise.js"></script>
 
     <!-- Game files -->
     <script src='js/utils.js'></script>
@@ -44,41 +44,29 @@
 
                 <!-- Map tiles -->
                 <div id='map' class="layer">
+
+					<!-- Map canvas with flat tiles painted over -->
                     <canvas id="map_tiles"></canvas>
+
+					<!-- Fog layer -->
                     <canvas id="map_fog"></canvas>
+
+					<!-- Selection cursor -->
                     <div class="selection"></div>
+
+					<!-- Rectangular marker for selecting/highlighting areas -->
                     <!--<div id="marker" style="background: rgba(255,0,0,0.5); outline: 1px solid red; width: 5px; height: 5px; position: absolute;"></div>-->
 
-                    <!-- All units and other objects -->
-                    <div id="cities">
-                    </div>
-
-                    <div id="terrain">
-
-                    </div>
-
-                    <!--<div id="units" style="-webkit-transform-style: preserve-3d;">
-                        <div class="city-new" style="width: 64px; height: 48px; background-color: rgba(255,0,0,0.5); border: 1px solid red; border-bottom: 1px solid #ffff00; position: absolute; top: 0; left: 0; -webkit-transform: rotateX(-25deg) translateZ(0px) translateY(-16px);"></div>
-
-                    </div>-->
+                    <!-- All units, cities and other overlaid objects -->
+                    <div id="cities"></div>
+                    <div id="terrain"></div>
+					<div id="units"></div>
                 </div>
-
-
-
-            </div>
-
-
-
-            <!-- Units -->
-            <!--<div id="map_units_outer" class="layer">
-                <div id="map_units"></div>
-            </div>-->
+			</div>
 		</div>
 
 
-
-
-
+		<!-- GUI -->
        <div id="gui">
 
             <!-- Top menu bar -->
@@ -90,7 +78,6 @@
             </div>
 
             <!--<div id="turn" style="position: absolute; top: 3px; right: 60px;  color: white;"></div>-->
-
 
             <div id="dialogs">
 

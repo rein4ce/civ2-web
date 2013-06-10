@@ -58,7 +58,7 @@ var Unit = function(type, x, y, player, options)
 	this.y				= y;
 	this.type			= type;
 	this.div			= null;						// DOM element
-	this.absPos			= Game.map.getTilePos(x,y);		// get map pixel position
+	this.absPos			= civ.map.getTilePos(x,y);		// get map pixel position
 	this.movePoints		= type.move;				// move points this turn
 	this.hp				= type.hp;					// health points
 	this.action			= UnitAction.Idle;
@@ -89,7 +89,7 @@ var Unit = function(type, x, y, player, options)
 	{
 		unit.x = x;
 		unit.y = y;
-		unit.absPos	= Game.map.getTilePos(x,y);
+		unit.absPos	= civ.map.getTilePos(x,y);
 		unit.div.css("transform", "translate3d("+(unit.absPos.x)+"px, 0px, "+((y/2-map3dHeightHalf)*map3dHeightHalf)+"px)");
 		unit.div.css("z-index",y*10);
 	}
@@ -101,7 +101,7 @@ var Unit = function(type, x, y, player, options)
 	 */
 	function isTileMoveable(x,y)
 	{
-		var tile = Game.map.getTile(x,y);
+		var tile = civ.map.getTile(x,y);
 		if (!tile) return false;
 
 		var type = TileTypesList[tile.type];
@@ -156,7 +156,7 @@ var Unit = function(type, x, y, player, options)
 	 */
 	this.div.click(function()
 	{
-		Game.selectUnit(unit);
+		civ.game.selectUnit(unit);
 	});
 
 	/**
@@ -234,9 +234,9 @@ var Unit = function(type, x, y, player, options)
 	function buildCity()
 	{
 		if (type != UnitTypes.Settler && type != unitTypes.Engineer) return;
-		if (Game.buildNewCity(unit.player, unit.x, unit.y))
+		if (civ.game.buildNewCity(unit.player, unit.x, unit.y))
 		{
-			Game.destroyUnit(unit);
+			civ.game.destroyUnit(unit);
 		}
 	}
 
@@ -282,7 +282,7 @@ var Unit = function(type, x, y, player, options)
 	// Check if it's visible
 	this.checkVisible = function()
 	{
-		if (this.absPos.x < Game.map.view.x-TileWidth || this.absPos.y < Game.map.view.y-TileHeight || this.absPos.x > Game.map.view.x+Game.map.view.width || this.absPos.y > Game.map.view.y+Game.map.view.height) {
+		if (this.absPos.x < civ.map.view.x-TileWidth || this.absPos.y < civ.map.view.y-TileHeight || this.absPos.x > civ.map.view.x+civ.map.view.width || this.absPos.y > civ.map.view.y+civ.map.view.height) {
 			if (!this.hidden) { this.div.css("display","none"); this.hidden = true; }
 		} else
 		if (this.hidden) { this.div.css("display","block"); this.hidden = false; }

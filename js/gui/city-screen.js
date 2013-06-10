@@ -14,7 +14,7 @@ var CityScreen = function(city)
 		drawTradeBar();
 		drawOutput();
 
-		$("#city-screen .title").text(city.name + ", "+ Game.getYearString());
+		$("#city-screen .title").text(city.name + ", "+ civ.game.getYearString());
 
 		// position city icon
 		var pos = getUnitIconPosition(3,city.type);
@@ -341,7 +341,7 @@ var CityScreen = function(city)
 
 		var x = city.x - (city.y%2 == 1 ? 2 : 3), y = city.y-6;
 		var w = 6, h = 13;
-		var pos = Game.map.getTilePos(city.x,city.y);
+		var pos = civ.map.getTilePos(city.x,city.y);
 
 		var options =
 		{
@@ -349,7 +349,7 @@ var CityScreen = function(city)
 			offset:			new Point(-pos.x+TileWidth*2, -pos.y+TileHeight2*7)
 		};
 
-		Game.map.drawTiles(x,y,w,h,options);
+		civ.map.drawTiles(x,y,w,h,options);
 	}
 
 	function drawMinimapOverlay()
@@ -376,7 +376,7 @@ var CityScreen = function(city)
 			{ x: city.x, y: city.y }
 		];
 
-		var center = Game.map.getTilePos(city.x, city.y);
+		var center = civ.map.getTilePos(city.x, city.y);
 		var offset = new Point(
 			(TileWidth*0.75)*1.5,
 			(TileHeight*0.75)*2.5-4
@@ -388,7 +388,7 @@ var CityScreen = function(city)
 		 for (var i=0; i<taken.length; i++)
 		 {
 		 var tile = taken[i];
-		 var mapPos = Game.map.getTilePos(tile.x, tile.y);
+		 var mapPos = civ.map.getTilePos(tile.x, tile.y);
 		 var pos = new Point(
 		 TileHeight2*4+(mapPos.x - center.x),
 		 TileWidth2*1.7+(mapPos.y - center.y)
@@ -403,7 +403,7 @@ var CityScreen = function(city)
 			var tile = city.tiles[i];
 
 			// get the on-screen position of the tile
-			var mapPos = Game.map.getTilePos(tile.x, tile.y);
+			var mapPos = civ.map.getTilePos(tile.x, tile.y);
 			var pos = new Point(
 				offset.x + (mapPos.x - center.x) * 0.75,
 				offset.y + (mapPos.y - center.y) * 0.75
@@ -479,7 +479,7 @@ var CityScreen = function(city)
 		function tileToMinimapPos(x,y)
 		{
 			var pos = { x: x, y: y };
-			var spos = Game.map.getTilePos(pos.x, pos.y);
+			var spos = civ.map.getTilePos(pos.x, pos.y);
 			spos.x *= 0.75;
 			spos.y *= 0.75;
 			spos.y -= 2;

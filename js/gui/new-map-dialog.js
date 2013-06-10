@@ -17,7 +17,7 @@ var NewMapDialog = function()
 			return alert("Please provide a map name!");
 
 		$("#dialog-new-map, #dialog-backdrop").hide();
-		Game.createNewMap(name, width, height);
+		civ.game.createNewMap(name, width, height);
 	});
 
 	this.close = function()

@@ -9,7 +9,8 @@ var ImagesList =
 	"img/terrain2.png",
 	"img/units.png",
 	"img/blacktile.png",
-	"img/selection.png"
+	"img/selection.png",
+	"img/cities.png"
 ];
 
 // List of all sounds

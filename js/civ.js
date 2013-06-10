@@ -1,8 +1,4 @@
-var map3dOffsetX = 0;
-var map3dOffsetY = 285;
-var map3dPerspective = 646;
-var map3dHeightHalf = 9;
-
+// Global selectors
 var $container		= null;
 var $map			= null;
 var $mapCanvas 		= null;
@@ -17,75 +13,31 @@ var $cities			= null;
 var Width 			= null;
 var Height 			= null;
 
+
+
 var Civ = function()
 {
 	this.map3d			= true;			// make forests and mountains 3d tiles
+
+	this.game			= null;
+	this.map			= null;
+	this.editor			= Editor;
+}
+
+Civ.prototype.init = function()
+{
+	this.initSelectors();
+	initUnitTypes();
+
+	this.game = new Game();
+	this.game.start();
+	this.editor.init();
+
+	this.initUI();
 }
 
 
-
-
-var civ = new Civ();
-
-$(function()
-{
-	loadResources(function()
-	{
-		console.log("Resources loaded");
-
-		initSelectors();
-		initUnitTypes();
-		initUI();
-		initView();
-
-		Game.start();
-
-		// TODO: Temp
-		for (var i=0; i<100; i++)
-		{
-			//new Unit((Math.random()*UnitTypes.length)|0, 0, i);
-		}
-
-
-		gameLoop();
-	});
-});
-
-var MaxFPS = 5;
-var fps = 0;
-var realtime, frametime, oldRealtime;
-
-
-/**
- * Setup view projection
- */
-function initView()
-{
-	// TODO: temp
-	// Setup 3d view
-/*	var rotation = "15deg";
-	var perspective = map3dPerspective+"px";
-	$("#map_units_outer")
-		.css({
-			"-webkit-perspective": perspective,
-			"perspective": perspective
-		})
-		.css({
-			"-webkit-perspective-origin": "50% -320%",
-			"perspective-origin": "50% -320%"
-		});
-
-	$("#map_units")
-		.css("-webkit-transform", "translate3d("+map3dOffsetX+"px, "+map3dOffsetY+"px, 0px)")
-		.css("transform", "translate3d("+map3dOffsetX+"px, "+map3dOffsetY+"px, 0px)")
-		.css("-webkit-transform-style", "preserve-3d")
-		.css("transform-style", "preserve-3d");*/
-}
-
-/**
- * Grab references to all important DOM elements
- */
-function initSelectors()
+Civ.prototype.initSelectors = function()
 {
 	$container		= $("#view");
 	$map			= $("#map");
@@ -104,28 +56,13 @@ function initSelectors()
 }
 
 
-////////////////////////////////////////////////////////////////////
-// Init events
-////////////////////////////////////////////////////////////////////
-function initKeyBindings() {
-	$("body").keydown(function(e)
-	{
-		// Moving the unit
-		if (Game.selectedUnit != null)
-		{
-			var key = e.which || e.keyCode;
-			Game.selectedUnit.onKeyPress(key);
-		}
-	});
-}
-
-function initUI()
+Civ.prototype.initUI = function()
 {
-	$("#end-turn").click(Game.endTurn);
+	$("#end-turn").on("click", civ.game.endTurn.bind(civ.game));
 	/*$("#dialogs").click(function()
-	{
-		$("#dialogs").hide();
-	});*/
+	 {
+	 $("#dialogs").hide();
+	 });*/
 
 	// dialog close button
 	$(".dialog-close-btn, .cancel-button").on("click", function()
@@ -144,6 +81,41 @@ function initUI()
 	$("#menu-new-map").on("click", function()
 	{
 		new NewMapDialog();
+	});
+}
+
+
+var civ = new Civ();
+
+$(function()
+{
+	loadResources(function()
+	{
+		console.log("Resources loaded");
+		civ.init();
+		gameLoop();
+	});
+});
+
+var MaxFPS = 5;
+var fps = 0;
+var realtime, frametime, oldRealtime;
+
+
+
+
+////////////////////////////////////////////////////////////////////
+// Init events
+////////////////////////////////////////////////////////////////////
+function initKeyBindings() {
+	$("body").keydown(function(e)
+	{
+		// Moving the unit
+		if (civ.game.selectedUnit != null)
+		{
+			var key = e.which || e.keyCode;
+			civ.game.selectedUnit.onKeyPress(key);
+		}
 	});
 }
 
